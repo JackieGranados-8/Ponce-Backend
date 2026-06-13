@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { notifyContactForm, sendEmail } = require('../Utils/sendEmails');
+const { sendEmail } = require('../Utils/resendEmail');
 
 console.log("🔥 CONTACT ROUTE LOADED");
 
@@ -19,16 +19,25 @@ router.post('/', async (req, res) => {
 
     contactData.email = contactData.email.trim().toLowerCase();
 
+    if (!process.env.BUSINESS_EMAIL) {
+       console.error("❌ BUSINESS_EMAIL missing in Render environment variables");
+  throw new Error("BUSINESS_EMAIL is not defined in environment variables");
+}
 
 
     // 1. Send admin notification email
-    await notifyContactForm(contactData);
+    await sendEmail({
+  to: process.env.BUSINESS_EMAIL,
+  subject: "New Contact Form Submission",
+  text: `
+Name: ${contactData.name}
+Email: ${contactData.email}
+Phone: ${contactData.phone}
+Message: ${contactData.message}
+  `
+});
 
-    // 2. Validate email exists
-    if (!contactData.email) {
-      console.log("❌ NO EMAIL FOUND - STOPPING THANK YOU EMAIL");
-      return res.status(400).json({ error: "Email missing" });
-    }
+    
 
     console.log("➡️ Sending thank you email to:", contactData.email);
 
@@ -44,12 +53,11 @@ router.post('/', async (req, res) => {
 
           <p><strong>Your message:</strong></p>
           <p>${(contactData.message || "")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
             .replace(/&/g, "&amp;")
-  
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;")
+.replace(/"/g, "&quot;")
+.replace(/'/g, "&#039;")
           }</p>
 
           <br/>

@@ -11,14 +11,15 @@
   "keywords": [],
   "author": "Jackie",
   "license": "ISC",
-  "type":"commonjs",
+  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "mongoose": "^9.1.5",
-    "nodemailer": "^7.0.12"
+    "nodemailer": "^7.0.12",
+    "resend": "^6.12.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
