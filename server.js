@@ -4,33 +4,34 @@
 console.log("🔥 SERVER FILE LOADED 🔥");
 
 const express = require("express");//bring an express to create api
-//const cors = require("cors");
-const allowedOrigins = [
-  "https://poncecountertopsinc.com",
-  "https://www.poncecountertopsinc.com",
-  "http://localhost:5500"
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow tools like Postman or server-to-server calls
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  }
-}));
-//enables cross origin requests
+const cors = require("cors");
 const rateLimit =require("express-rate-limit");
 require('dotenv').config()//allows us to safely store credentials
 const mongoose = require("mongoose");
 
 
 const app = express(); 
-app.use(cors());//enables cors so backend can communicate w frontend
+
+app.use(cors({
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "https://poncecountertopsinc.com",
+      "https://www.poncecountertopsinc.com",
+      "http://localhost:5500"
+    ];
+
+    // allow requests with no origin (Postman / server-to-server)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.log("Blocked CORS request from:", origin);
+      return callback(newError("Not allowed by CORS")); // ❗ safer than throwing error
+    }
+  }
+}));
+
 
 app.use(express.json());
 
