@@ -47,9 +47,19 @@ Message: ${contactData.message}
       subject: "We received your message",
       text: "We received your request and will get back to you soon.",
       html: `
-        <div style="font-family:Arial;padding:20px;">
-          <h2>Thank you, ${contactData.name || "there"}!</h2>
-          <p>We received your message and will get back to you within 24–48 hours.</p>
+        <div style="font-family:Arial;padding:20px; max-width:600px;">
+          
+        <div style="text-align:center;margin-bottom:20px;">
+      <img 
+        src="https://relaxed-zuccutto-1d547d.netlify.app/images/Logo.png" 
+        alt="Ponce Countertops"
+        style="max-width:180px;"
+      />
+    </div>
+        
+        <h2 style = "text-align:center;">Thank you, ${contactData.name || "there"}!</h2>
+          
+        <p>We received your message and will get back to you within 24–48 hours.</p>
 
           <p><strong>Your message:</strong></p>
           <p>${(contactData.message || "")
