@@ -81,9 +81,9 @@ await sendEmail({
   text: `Hi ${name}, thank you for your review.`, // fallback
 
   html: `
-    <div style=" font-family:Arial;padding:20px;">
+    <div style=" font-family:Arial;padding:20px; max-width:600px">
       
-      <div style=" background: #111; text-align:center; margin-bottom:20px;">
+      <div style=" text-align:center; margin-bottom:20px;">
         <img src="${logoUrl}" alt ="Ponce Countertops" style="width:180px; style= "display:block; margin:0 auto;border-radius:8px;" />
       </div>
 
