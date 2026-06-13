@@ -1,7 +1,6 @@
 const express = require("express");
 const Review = require("../models/Review");
-//const sendEmail = require("../Utils/sendEmails");
-const { sendEmail } = require("../Utils/sendEmails");
+const { sendEmail } = require("../Utils/resendEmail");
 
 
 const router = express.Router();
@@ -19,6 +18,8 @@ router.post("/", async (req, res) => {
     try{
 
         const { name, email,rating, message } = req.body;
+
+        console.log("📩 Review received:", { name, email, rating });
         const numericRating = Number(rating);
 
         if (!name || !email || !rating || !message) {
@@ -43,41 +44,34 @@ router.post("/", async (req, res) => {
 
         //notify admin and business owner
         await sendEmail({
-         to:[process.env.ADMIN_EMAIL,process.env.BUSINESS_EMAIL],
-         subject: "🆕 New Review Submitted",
-         text: 
-         ` New review submitted:
-        
-        Name: ${name}
-        Email:${email}
-        Rating: ${numericRating}/5
+  to: process.env.ADMIN_EMAIL,
+  subject: "🆕 New Review Submitted",
+  text: `
+New review submitted:
 
-        "${message}"
+Name: ${name}
+Email: ${email}
+Rating: ${numericRating}/5
 
-Login to approve it.
+"${message}"
 `
-  });
-/*
-//Thank you email to client(reviewer)
-await sendEmail({
-    to:email,
-    subject: "Thank you for your review!",
-    text: [
-  `Hi ${name},`,
-  ``,
-  `Thank you for taking the time to leave us a review.`,
-  `We truly appreciate your feedback and support.`,
-  ``,
-  `Your review will appear on our website once it is approved.`,
-  ``,
-   `If you have any questions, feel free to reach out.`,
-  ``,
-  `Best regards,`,
-  `Ponce Countertops Inc`
-].join("\n")
+});
 
-  });
-*/
+await sendEmail({
+  to: process.env.BUSINESS_EMAIL,
+  subject: "🆕 New Review Submitted",
+  text: `
+New review submitted:
+
+Name: ${name}
+Email: ${email}
+Rating: ${numericRating}/5
+
+"${message}"
+`
+});
+
+ 
 //const logoUrl = "https://yourdomain.com/images/logo.png";
 const logoUrl = "https://relaxed-zuccutto-1d547d.netlify.app/images/logo.png";
 try{
@@ -87,10 +81,10 @@ await sendEmail({
   text: `Hi ${name}, thank you for your review.`, // fallback
 
   html: `
-    <div style="font-family:Arial;padding:20px;">
+    <div style=" font-family:Arial;padding:20px;">
       
-      <div style="text-align:center;">
-        <img src="${logoUrl}" style="width:180px;" />
+      <div style=" background: #111; text-align:center; margin-bottom:20px;">
+        <img src="${logoUrl}" alt ="Ponce Countertops" style="width:180px; style= "display:block; margin:0 auto;border-radius:8px;" />
       </div>
 
       <h2>Thank you, ${name}!</h2>
@@ -116,7 +110,8 @@ catch (EmailErr){
   console.error("Email failed:", EmailErr);
 }
 
-  res.status(201).json({
+  return res.status(201).json({
+    success: true,
     message:"Review submitted successfully"
   });
 
@@ -131,10 +126,10 @@ catch (EmailErr){
 router.get("/pending", adminAuth, async (req,res) => {
   try {
     const reviews =await Review.find({ approved :false})
-    res.json(reviews);
+    return res.json(reviews);
   }
   catch(err){
-    res.status(500).json ({ error: "Failed to load pending reviews"});
+    return res.status(500).json ({ error: "Failed to load pending reviews"});
 
   }
 });
@@ -150,9 +145,9 @@ router.patch("/:id/approve", adminAuth, async (req, res) => {
 
     console.log(`✅ Review approved: ${req.params.id} at ${new Date().toISOString()}`);
 
-    res.json(review);
+     return res.json(review);
   } catch (err) {
-    res.status(500).json({ error: "Failed to approve review" });
+    return res.status(500).json({ error: "Failed to approve review" });
   }
 });
 
@@ -164,10 +159,10 @@ router.delete ("/:id", adminAuth, async (req, res) => {
 
         console.log(`🗑️ Review deleted: ${req.params.id} at ${new Date().toISOString()}`);
 
-        res.json({message: "Review deleted"});
+         return res.json({message: "Review deleted"});
     }
     catch (err){
-        res.status(500).json({error: "Failed to delete review"});
+         return res.status(500).json({error: "Failed to delete review"});
     }
 });
 
@@ -177,7 +172,7 @@ router.get("/approved", async (req, res) => {
     const reviews = await Review.find({ approved: true }).sort({ createdAt: -1 });
     res.json(reviews);
   } catch (err) {
-    res.status(500).json({ error: "Failed to load approved reviews" });
+     return res.status(500).json({ error: "Failed to load approved reviews" });
   }
 });
 module.exports = router;
