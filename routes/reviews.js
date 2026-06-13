@@ -79,7 +79,7 @@ await sendEmail({
   });
 */
 //const logoUrl = "https://yourdomain.com/images/logo.png";
-const logoUrl = "https://via.placeholder.com/180x80?text=Ponce+Countertops";
+const logoUrl = "https://relaxed-zuccutto-1d547d.netlify.app/images/logo.png";
 try{
 await sendEmail({
   to: email,
