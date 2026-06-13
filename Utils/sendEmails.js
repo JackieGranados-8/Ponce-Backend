@@ -21,6 +21,9 @@ const sendEmail =async ({to, subject,text,html}) => {
             text,
             html
         });
+         console.log("📨 SMTP RESPONSE:", info);
+    console.log("📨 Accepted:", info.accepted);
+    console.log("📨 Rejected:", info.rejected);
         console.log(`✅ Email sent to ${to}`);
 
     } catch (error){
