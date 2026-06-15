@@ -8,7 +8,7 @@ const sendEmail = async ({ to, subject, text, html }) => {
     console.log("📤 RESEND EMAIL TO:", to);
 
     const data = await resend.emails.send({
-      from: "Ponce Countertops <noreply@send.poncecountertopsinc.com>",
+      from: "Ponce Countertops <noreply@poncecountertopsinc.com>",
       to,
       subject,
       text,
