@@ -99,6 +99,7 @@ await sendEmail({
 
       <p>Best regards,<br/>
       <strong>Ponce Countertops Inc</strong><br/>
+      San Diego County, CA<br/>
       (619) 288-1476</p>
 
     </div>

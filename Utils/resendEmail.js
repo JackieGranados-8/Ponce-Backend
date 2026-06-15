@@ -12,7 +12,8 @@ const sendEmail = async ({ to, subject, text, html }) => {
       to,
       subject,
       text,
-      html
+      html,
+      reply_to:"martin@ponce-countertops-inc.com"
     });
 
     console.log("✅ EMAIL SENT:", data);
