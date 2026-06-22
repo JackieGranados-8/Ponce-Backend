@@ -84,7 +84,7 @@ await sendEmail({
     <div style=" font-family:Arial;padding:20px; max-width:600px">
       
       <div style=" text-align:center; margin-bottom:20px;">
-        <img src="${logoUrl}" alt ="Ponce Countertops" style:"max-width:120px; width:100%; height:auto; display:block; margin:0 auto" />
+        <img src="${logoUrl}" alt ="Ponce Countertops" style="max-width:120px; width:100%; height:auto; display:block; margin:0 auto" />
       </div>
 
       <h2>Thank you, ${name}!</h2>
